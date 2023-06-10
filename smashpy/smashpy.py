@@ -2,6 +2,7 @@ import os
 import sys
 import shap
 import random
+import string
 import matplotlib
 import numpy as np
 import plotly as py
@@ -37,6 +38,7 @@ from tensorflow.python.keras.layers.core import Dense, Dropout, Activation, Flat
 from _version import __version__
     
 SEED = 42
+RANDOM_STR = ''.join((random.choice(string.ascii_lowercase) for i in range(10)))
 
 ###########################################################################################
 myColors = ['#e6194b', '#3cb44b', '#ffe119', '#4363d8', '#f58231',
@@ -615,7 +617,7 @@ class smashpy:
 		
 		early_stop = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
 
-		fBestModel = 'weights/best_model_%s.h5'%group_by
+		fBestModel = 'weights/' + RANDOM_STR + '_best_model_%s.h5'%group_by
 		best_model = ModelCheckpoint(fBestModel, verbose=1, save_best_only=True)
 
 		batch_size = 100
@@ -644,8 +646,8 @@ class smashpy:
 		self.__confusionM(pred, yy_test, labels=names, title="DNN", save=save)
 		print(classification_report(yy_test, pred, target_names=names))
 
-
-		model.load_weights('weights/best_model_%s.h5'%group_by)
+    file = 'weights/' + RANDOM_STR + '_best_model_%s.h5'%group_by
+		model.load_weights(path)
 		score = model.evaluate(X_test, y_test, verbose=1)
 
 
@@ -709,7 +711,9 @@ class smashpy:
 		model.compile(loss=losses.categorical_crossentropy,
 					  optimizer=optimizers.Adam(learning_rate=0.001, amsgrad=False),
 					  metrics=['accuracy', 'AUC', 'Precision', 'Recall'])
-		model.load_weights('weights/best_model_%s.h5'%group_by)
+		
+		file = 'weights/' + RANDOM_STR + '_best_model_%s.h5'%group_by
+		model.load_weights(file)
 		
 		X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=SEED, stratify=y)
 		

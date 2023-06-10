@@ -645,9 +645,9 @@ class smashpy:
 
 		self.__confusionM(pred, yy_test, labels=names, title="DNN", save=save)
 		print(classification_report(yy_test, pred, target_names=names))
-
-    file = 'weights/' + RANDOM_STR + '_best_model_%s.h5'%group_by
-		model.load_weights(path)
+		
+		file = 'weights/' + RANDOM_STR + '_best_model_%s.h5'%group_by
+		model.load_weights(file)
 		score = model.evaluate(X_test, y_test, verbose=1)
 
 
